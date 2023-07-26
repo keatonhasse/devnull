@@ -1,5 +1,5 @@
 browser.runtime.onInstalled.addListener(() => {
-  const DBOpenRequest = indexedDB.open("void");
+  const DBOpenRequest = indexedDB.open("devnull");
   DBOpenRequest.onerror = (event) => {
     console.error(`Database error: ${event.target.errorCode}`);
   }
@@ -24,7 +24,7 @@ async function getTabs() {
 }
 
 async function saveTabs(tabs) {
-  indexedDB.open("void").onsuccess = (event) => {
+  indexedDB.open("devnull").onsuccess = (event) => {
     db = event.target.result;
     const transaction = db.transaction("groups", "readwrite");
     const store = transaction.objectStore("groups");
