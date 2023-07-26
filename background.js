@@ -51,7 +51,7 @@ async function closeTabs(tabs) {
   await browser.tabs.create({});
 }
 
-async function voidTabs() {
+async function nullTabs() {
   getTabs()
     .then(async (tabs) => {
       await saveTabs(tabs);
@@ -62,4 +62,4 @@ async function voidTabs() {
     });
 }
 
-browser.browserAction.onClicked.addListener(voidTabs);
+browser.browserAction.onClicked.addListener(nullTabs);
