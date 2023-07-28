@@ -35,7 +35,6 @@ async function saveTabs(tabs) {
         return (tab.url !== 'about:newtab')
       })
     };
-    //group.urls = tabs.map(tab => tab.url).filter(tab => { return (tab.url !== 'about:newtab' )});
     store.add(group);
   }
 }

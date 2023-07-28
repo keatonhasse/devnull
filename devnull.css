@@ -8,6 +8,9 @@ body {
     color: #f0f0f0;
   }
 }
+header {
+  user-select: none;
+}
 body ol {
   margin: 1rem 0;
 }
@@ -16,29 +19,31 @@ body ol#groups li {
 }
 body ol#groups li a {
   text-decoration: none;
-  color: lightblue;
+  color: royalblue;
 }
 body div.group-header {
   display: flex;
-  flex-direction: row;
-  margin: 1rem 0;
 }
 body div.group-header h2 {
-  margin-right: 0.75rem;
+  margin: 0 0.75rem 0 0;
+  user-select: none;
 }
 body div.group-right {
   display: flex;
   flex-direction: column;  
 }
+body div.group-header p {
+  margin: 0;
+  user-select: none;
+}
 body div.group-actions {
   display: flex;
-  flex-direction: row;
 }
 body button {
   background-color: transparent;
   border: none;
   padding: 0;
-  margin: 0 0.25rem;
+  margin-right: 0.5rem;
   font-size: 0.8rem;
   cursor: pointer;
   user-select: none;
