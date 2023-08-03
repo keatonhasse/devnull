@@ -10,7 +10,27 @@
     <header id="header">
       <h1>devnull</h1>
     </header>
-    <ol id="groups"></ol>
+    <ol id="groups">
+      <template id="group-template">
+        <li class="group">
+          <div class="group-header">
+            <h2 class="group-title"></h2>
+            <div class="group-right">
+              <p class="group-date"></p>
+              <button class="restore-button">restore</button>
+              <button class="delete-button">delete</button>
+            </div>
+          </div>
+          <ol class="tab-list">
+            <template id="tab-template">
+              <li class="tab">
+                <a target="_blank" rel="norefferer"></a>
+              </li>
+            </template>
+          </ol>
+        </li>
+      </template>
+    </ol>
   </body>
   <footer>
     foot

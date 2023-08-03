@@ -52,7 +52,7 @@ function createHeader(group) {
   deleteButton.textContent = 'delete';
   right.appendChild(deleteButton);*/
 
-  const header = createElement('div', 'group-header');
+  /*const header = createElement('div', 'group-header');
   createElement('h2', 'group-title', group.title, header);
   //header.appendChild(title);
   const right = createElement('div', 'group-right');
@@ -64,18 +64,42 @@ function createHeader(group) {
   //right.appendChild(createButton('delete-button', 'delete'));
   createElement('button', 'restore-button', 'restore', right);
   createElement('button', 'delete-button', 'delete', right);
+  return header;*/
+  const header = document.getElementById('group-template').content.cloneNode(true);
+  //console.log(header);
+  header.querySelector('.group').id = group.timestamp;
+  header.querySelector('.group-title').textContent = group.title;
+  header.querySelector('.group-date').textContent = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
+  //header.querySelector('restore-button').textContent = 'restore';
   return header;
+}
+
+function createGroupList(group) {
+  const list = document.getElementById(group.timestamp).querySelector('.tab-list');
+  //console.log(list);
+  //const item = document.getElementById('tab-template').content.cloneNode(true);
+  //const a = item.querySelector('a');
+  //console.log(item);
+  group.tabs.map(tab => {
+    const item = document.getElementById('tab-template').content.cloneNode(true);
+    item.querySelector('a').href = tab.url;
+    item.querySelector('a').textContent = tab.title;
+    list.appendChild(item);
+  });
+  //return list;
 }
 
 function createGroup(group) {
   const groups = document.getElementById('groups');
   const fragment = document.createDocumentFragment();
-  const list = document.createElement('li');
-  list.id = group.timestamp;
-  list.appendChild(createHeader(group));
-  list.appendChild(document.createElement('ol'));
-  fragment.append(list);
+  //const list = document.createElement('li');
+  //list.id = group.timestamp;
+  //list.appendChild(createHeader(group));
+  fragment.appendChild(createHeader(group));
   groups.append(fragment);
+  createGroupList(group);
+  //list.appendChild(createGroupList(group));
+  //fragment.append(list);
 }
 
 function getGroups() {
@@ -102,7 +126,7 @@ function getGroups() {
                            </li>`;*/
         //groups.innerHTML += groupHTML;
         //document.getElementsByClassName(`${group.timestamp}`)['0'].parentElement.getElementsByClassName('group-date')['0'].innerHTML = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
-        const item = document.getElementById(`${group.timestamp}`);
+        const item = document.getElementById(group.timestamp);
         //item.querySelector('.group-date').innerHTML = `created ${new Date(group.timestamp).toLocaleString()}`;
         //groups.querySelector(`li#${group.timestamp} div.group-header div.group-right p.group-date`).innerHTML = `created ${new Date(group.timestamp).toLocaleString()}`;
         item.addEventListener('click', (e) => {
@@ -119,7 +143,7 @@ function getGroups() {
             //e.parentElement.removeChild(e);
           }
         });
-        item.querySelector('ol').innerHTML = group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
+        //item.querySelector('ol').innerHTML = group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
         //document.querySelector('.restore-button').onclick = restoreGroup();
         //document.querySelector('.delete-button').onclick = deleteGroup();
         //document.getElementById(`${group.timestamp}`).innerHTML += group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
