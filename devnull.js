@@ -17,8 +17,20 @@ function deleteGroup(group) {
   }
 }
 
+function createElement(tag, className, textContent, parent) {
+  const element = document.createElement(tag);
+  element.className = className;
+  if (textContent) {
+    element.textContent = textContent;
+  }
+  if (parent) {
+    parent.appendChild(element);
+  }
+  return element;
+}
+
 function createHeader(group) {
-  const header = document.createElement('div');
+  /*const header = document.createElement('div');
   header.className = 'group-header';
   const title = document.createElement('h2');
   title.className = 'group-title';
@@ -38,7 +50,20 @@ function createHeader(group) {
   const deleteButton = document.createElement('button');
   deleteButton.className = 'delete-button';
   deleteButton.textContent = 'delete';
-  right.appendChild(deleteButton);
+  right.appendChild(deleteButton);*/
+
+  const header = createElement('div', 'group-header');
+  createElement('h2', 'group-title', group.title, header);
+  //header.appendChild(title);
+  const right = createElement('div', 'group-right');
+  header.appendChild(right);
+  createElement('p', 'group-date', `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`, right);
+  //right.appendChild(date);
+  //const createButton = (className, textContent, parent) => createElement('button', className, textContent, parent);
+  //right.appendChild(createButton('restore-button', 'restore'));
+  //right.appendChild(createButton('delete-button', 'delete'));
+  createElement('button', 'restore-button', 'restore', right);
+  createElement('button', 'delete-button', 'delete', right);
   return header;
 }
 
