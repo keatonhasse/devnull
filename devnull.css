@@ -1,53 +1,62 @@
 body {
-  margin: 0 0 0 2rem;
-  padding: 0;
+  margin: 0;
+  padding: 0 0 0 2rem;
+  width: 100vw;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #0f0f0f;
     color: #f0f0f0;
   }
 }
+
 header {
   user-select: none;
 }
+
 body ol {
-  margin: 1rem 0;
+  padding: 1rem;
+  width: 100%;
 }
+
 body ol#groups li {
   list-style: none;
 }
+
 body ol#groups li a {
   text-decoration: none;
   color: royalblue;
 }
+
 body div.group-header {
   display: flex;
 }
+
 body div.group-header h2 {
   margin: 0 0.75rem 0 0;
   user-select: none;
+  white-space: normal;
 }
-body div.group-right {
-  display: flex;
-  flex-direction: column;  
-}
+
 body div.group-header p {
   margin: 0;
   user-select: none;
 }
-body div.group-actions {
-  display: flex;
-}
+
 body button {
   background-color: transparent;
   border: none;
   padding: 0;
-  margin-right: 0.5rem;
-  font-size: 0.8rem;
   cursor: pointer;
-  user-select: none;
 }
+
+.restore-button  {
+  margin-right: 0.5rem;
+}
+
 @media (prefers-color-scheme: dark) {
   body button {
     color: #f0f0f0;
