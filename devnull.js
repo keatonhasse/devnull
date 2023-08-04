@@ -2,104 +2,109 @@ document.addEventListener('DOMContentLoaded', () => {
   getGroups();
 });
 
-function restoreGroup() {
+function open(name, callback) {
+  indexedDB.open(name).onsuccess = (e) => {
+    const db = e.target.result;
+    const store = db.transaction('groups', 'readwrite').objectStore('groups');
+    callback(store);
+  }
+}
 
+function restoreGroup(group) {
+  open('devnull', (store) => {
+    store.get(group).onsuccess = (e) => {
+      const tabs = e.target.result.tabs;
+      tabs.forEach((tab) => {
+        browser.tabs.create({ url: tab.url });
+        browser.tabs.update({ active: true });
+      });
+    }
+  });
+  /*indexedDB.open('devnull').onsuccess = (e) => {
+    const db = e.target.result;
+    const store = db.transaction('groups', 'readwrite').objectStore('groups');
+    store.get(group).onsuccess = (e) => {
+      const tabs = e.target.result.tabs;
+      console.log(tabs);
+      tabs.forEach((tab) => {
+        browser.tabs.create({ url: tab.url });
+        browser.tabs.update({ active: true });
+      });
+    }
+  }*/
+  deleteGroup(group);
 }
 
 function deleteGroup(group) {
-  //const parent = e.currentTarget.parentNode;
-  //document.getElementsByClassName('restore-button')['0'].parentNode.parentNode.querySelector('ol').className
-  //console.log(parent);
-  indexedDB.open('devnull').onsuccess = (e) => {
+  open('devnull', (store) => {
+    store.delete(group);
+  });
+  /*indexedDB.open('devnull').onsuccess = (e) => {
     const db = e.target.result;
     const store = db.transaction('groups', 'readwrite').objectStore('groups');
     store.delete(group);
-  }
+  }*/
 }
 
-function createElement(tag, className, textContent, parent) {
-  const element = document.createElement(tag);
-  element.className = className;
-  if (textContent) {
-    element.textContent = textContent;
-  }
-  if (parent) {
-    parent.appendChild(element);
-  }
-  return element;
-}
-
-function createHeader(group) {
-  /*const header = document.createElement('div');
-  header.className = 'group-header';
-  const title = document.createElement('h2');
-  title.className = 'group-title';
-  title.textContent = group.title;
-  header.appendChild(title);
-  const right = document.createElement('div');
-  right.className = 'group-right';
-  header.appendChild(right);
-  const date = document.createElement('p');
-  date.className = 'group-date';
-  date.textContent = `created ${new Date(group.timestamp).toLocaleString()}`
-  right.appendChild(date);
-  const restoreButton = document.createElement('button');
-  restoreButton.className = 'restore-button';
-  restoreButton.textContent = 'restore';
-  right.appendChild(restoreButton);
-  const deleteButton = document.createElement('button');
-  deleteButton.className = 'delete-button';
-  deleteButton.textContent = 'delete';
-  right.appendChild(deleteButton);*/
-
-  /*const header = createElement('div', 'group-header');
-  createElement('h2', 'group-title', group.title, header);
-  //header.appendChild(title);
-  const right = createElement('div', 'group-right');
-  header.appendChild(right);
-  createElement('p', 'group-date', `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`, right);
-  //right.appendChild(date);
-  //const createButton = (className, textContent, parent) => createElement('button', className, textContent, parent);
-  //right.appendChild(createButton('restore-button', 'restore'));
-  //right.appendChild(createButton('delete-button', 'delete'));
-  createElement('button', 'restore-button', 'restore', right);
-  createElement('button', 'delete-button', 'delete', right);
-  return header;*/
-  const header = document.getElementById('group-template').content.cloneNode(true);
-  //console.log(header);
-  header.querySelector('.group').id = group.timestamp;
-  header.querySelector('.group-title').textContent = group.title;
-  header.querySelector('.group-date').textContent = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
-  //header.querySelector('restore-button').textContent = 'restore';
-  return header;
-}
-
-function createGroupList(group) {
-  const list = document.getElementById(group.timestamp).querySelector('.tab-list');
-  //console.log(list);
-  //const item = document.getElementById('tab-template').content.cloneNode(true);
-  //const a = item.querySelector('a');
-  //console.log(item);
-  group.tabs.map(tab => {
-    const item = document.getElementById('tab-template').content.cloneNode(true);
-    item.querySelector('a').href = tab.url;
-    item.querySelector('a').textContent = tab.title;
-    list.appendChild(item);
+function removeTabFromGroup(tab, group) {
+  open('devnull', (store) => {
+    store.get(group).onsuccess = (e) => {
+      const item = e.target.result;
+      if (item.tabs.length == 1) {
+        store.delete(group);
+      } else {
+        item.tabs = item.tabs.splice(tab, 1);
+        store.put(item);
+      }
+      /*console.log(tab);
+      tabs.splice(tab, 1);
+      store.put(group);*/
+    }
+    //tabs.splice(tab, 1);
+    /*console.log('remove tab');
+    console.log(store.get(group));
+    const index = store.index('timestamp');
+    index.getKey(group).onsuccess = () => {
+      console.log(index.result);
+    }*/
+    //console.log(index);
+    /*store.getKey(group).onsuccess = () => {
+      console.log(group.result);
+    }*/
   });
-  //return list;
+  /*indexedDB.open('devnull').onsuccess = (e) => {
+    const db = e.target.result;
+    const store = db.transaction('groups', 'readwrite').objectStore('groups');
+  }*/
 }
 
 function createGroup(group) {
   const groups = document.getElementById('groups');
   const fragment = document.createDocumentFragment();
-  //const list = document.createElement('li');
-  //list.id = group.timestamp;
-  //list.appendChild(createHeader(group));
-  fragment.appendChild(createHeader(group));
-  groups.append(fragment);
-  createGroupList(group);
-  //list.appendChild(createGroupList(group));
-  //fragment.append(list);
+  fragment.appendChild(function() {
+    const header = document.getElementById('group-template').content.cloneNode(true);
+    header.querySelector('.group').id = group.timestamp;
+    header.querySelector('.group-title').textContent = group.title;
+    header.querySelector('.group-date').textContent = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
+    const list = header.querySelector('.tab-list');
+    group.tabs.map(tab => {
+      const item = header.getElementById('tab-template').content.cloneNode(true);
+      item.querySelector('a').href = tab.url;
+      item.querySelector('a').textContent = tab.title;
+      item.querySelector('a').addEventListener('click', (e) => {
+        const url = e.target.href;
+        removeTabFromGroup(tab.index, group.timestamp);
+        console.log(group.timestamp);
+      });
+      item.querySelector('.tab-remove-button').addEventListener('click', (e) => {
+        //groups.removeChild(tab);
+        removeTabFromGroup(tab, index, group.timestamp);
+      });
+      list.appendChild(item);
+    });
+    return header;
+  }());
+  groups.prepend(fragment);
 }
 
 function getGroups() {
@@ -111,43 +116,17 @@ function getGroups() {
       if (cursor) {
         const group = cursor.value;
         createGroup(group);
-        /*const groupHTML = `<li id="${group.timestamp}">
-                            <div class="group-header">
-                              <h2 class="group-title">${group.title}</h2>
-                              <div class="group-right">
-                                <p class="group-date"></p>
-                                <div class="group-actions">
-                                  <button class="restore-button">restore</button>
-                                  <button class="delete-button">delete</button>
-                                </div>
-                              </div>
-                            </div>
-                              <ol></ol>
-                           </li>`;*/
-        //groups.innerHTML += groupHTML;
-        //document.getElementsByClassName(`${group.timestamp}`)['0'].parentElement.getElementsByClassName('group-date')['0'].innerHTML = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
         const item = document.getElementById(group.timestamp);
-        //item.querySelector('.group-date').innerHTML = `created ${new Date(group.timestamp).toLocaleString()}`;
-        //groups.querySelector(`li#${group.timestamp} div.group-header div.group-right p.group-date`).innerHTML = `created ${new Date(group.timestamp).toLocaleString()}`;
         item.addEventListener('click', (e) => {
           if (e.target.className == 'restore-button') {
-            console.log('clicked restore!');
+            groups.removeChild(item);
+            restoreGroup(group.timestamp);
           }
           if (e.target.className == 'delete-button') {
-            //console.log('clicked delete!');
-            //const id = document.getElementById(`${group.timestamp}`).parentElement;
             groups.removeChild(item);
-            //console.log(id);
-            //deleteGroup(group.timestamp);
-            //console.log(e.target.parentElement.parentElement.parentElement.parentElement.parentElement);
-            //e.parentElement.removeChild(e);
+            deleteGroup(group.timestamp);
           }
         });
-        //item.querySelector('ol').innerHTML = group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
-        //document.querySelector('.restore-button').onclick = restoreGroup();
-        //document.querySelector('.delete-button').onclick = deleteGroup();
-        //document.getElementById(`${group.timestamp}`).innerHTML += group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
-        //document.getElementsByClassName(`${group.timestamp}`)['0'].innerHTML = group.tabs.map(tab => `<li class="tab-title"><a href="${tab.url}" target="_blank" rel="noopener noreferrer" class="tab-url">${tab.title}</a></li>`).join(' ');
         cursor.continue();
       }
     };

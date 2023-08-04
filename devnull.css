@@ -1,9 +1,9 @@
 body {
-  margin: 0;
-  padding: 0 0 0 2rem;
+  margin: 0 2rem 0 2rem;
+  /*padding: 0 0 0 2rem;
   width: 100vw;
   overflow-x: auto;
-  box-sizing: border-box;
+  box-sizing: border-box;*/
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,8 +18,9 @@ header {
 }
 
 body ol {
-  padding: 1rem;
-  width: 100%;
+  margin: 1rem 0;
+  /*padding-right: 2.5rem;*/
+  display: inline-block;
 }
 
 body ol#groups li {
@@ -38,12 +39,15 @@ body div.group-header {
 body div.group-header h2 {
   margin: 0 0.75rem 0 0;
   user-select: none;
-  white-space: normal;
 }
 
 body div.group-header p {
   margin: 0;
   user-select: none;
+}
+
+body div.group-right {
+  flex-shrink: 0;
 }
 
 body button {
@@ -53,8 +57,17 @@ body button {
   cursor: pointer;
 }
 
-.restore-button  {
+.restore-button {
   margin-right: 0.5rem;
+}
+
+.tab-remove-button {
+  visibility: hidden;
+  margin-left: 0.5rem;
+}
+
+.tab-item:hover .tab-remove-button {
+  visibility: visible;
 }
 
 @media (prefers-color-scheme: dark) {
