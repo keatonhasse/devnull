@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
   getGroups();
 });
 
+function update() {
+  console.log(tabs);
+}
+
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  //if (request == 'update') update();
+  console.log(request);
+  //update(request);
+});
+
 function open(name, callback) {
   indexedDB.open(name).onsuccess = (e) => {
     const db = e.target.result;
@@ -20,18 +30,6 @@ function restoreGroup(group) {
       });
     }
   });
-  /*indexedDB.open('devnull').onsuccess = (e) => {
-    const db = e.target.result;
-    const store = db.transaction('groups', 'readwrite').objectStore('groups');
-    store.get(group).onsuccess = (e) => {
-      const tabs = e.target.result.tabs;
-      console.log(tabs);
-      tabs.forEach((tab) => {
-        browser.tabs.create({ url: tab.url });
-        browser.tabs.update({ active: true });
-      });
-    }
-  }*/
   deleteGroup(group);
 }
 
@@ -39,43 +37,16 @@ function deleteGroup(group) {
   open('devnull', (store) => {
     store.delete(group);
   });
-  /*indexedDB.open('devnull').onsuccess = (e) => {
-    const db = e.target.result;
-    const store = db.transaction('groups', 'readwrite').objectStore('groups');
-    store.delete(group);
-  }*/
 }
 
 function removeTabFromGroup(tab, group) {
   open('devnull', (store) => {
     store.get(group).onsuccess = (e) => {
       const item = e.target.result;
-      if (item.tabs.length == 1) {
-        store.delete(group);
-      } else {
-        item.tabs = item.tabs.splice(tab, 1);
-        store.put(item);
-      }
-      /*console.log(tab);
-      tabs.splice(tab, 1);
-      store.put(group);*/
+      item.tabs = item.tabs.splice(tab, 1);
+      store.put(item);
     }
-    //tabs.splice(tab, 1);
-    /*console.log('remove tab');
-    console.log(store.get(group));
-    const index = store.index('timestamp');
-    index.getKey(group).onsuccess = () => {
-      console.log(index.result);
-    }*/
-    //console.log(index);
-    /*store.getKey(group).onsuccess = () => {
-      console.log(group.result);
-    }*/
   });
-  /*indexedDB.open('devnull').onsuccess = (e) => {
-    const db = e.target.result;
-    const store = db.transaction('groups', 'readwrite').objectStore('groups');
-  }*/
 }
 
 function createGroup(group) {
@@ -91,15 +62,6 @@ function createGroup(group) {
       const item = header.getElementById('tab-template').content.cloneNode(true);
       item.querySelector('a').href = tab.url;
       item.querySelector('a').textContent = tab.title;
-      item.querySelector('a').addEventListener('click', (e) => {
-        const url = e.target.href;
-        removeTabFromGroup(tab.index, group.timestamp);
-        console.log(group.timestamp);
-      });
-      item.querySelector('.tab-remove-button').addEventListener('click', (e) => {
-        //groups.removeChild(tab);
-        removeTabFromGroup(tab, index, group.timestamp);
-      });
       list.appendChild(item);
     });
     return header;
@@ -118,13 +80,20 @@ function getGroups() {
         createGroup(group);
         const item = document.getElementById(group.timestamp);
         item.addEventListener('click', (e) => {
-          if (e.target.className == 'restore-button') {
+          if (e.target.className == 'restore-button' || e.target.className == 'delete-button') {
             groups.removeChild(item);
-            restoreGroup(group.timestamp);
+            (e.target.className == 'restore-button') ? restoreGroup(group.timestamp) : deleteGroup(group.timestamp);
           }
-          if (e.target.className == 'delete-button') {
-            groups.removeChild(item);
-            deleteGroup(group.timestamp);
+          if (e.target.className == 'tab' || e.target.className == 'tab-remove-button') {
+            const list = e.target.closest('.tab-list');
+            const nodes = Array.from(list.children);
+            if (nodes.length == 2) {
+              groups.removeChild(list.parentElement);
+              deleteGroup(group.timestamp);
+            } else {
+              list.removeChild(e.target.parentElement);
+              removeTabFromGroup(nodes.indexOf(e.target), group.timestamp);
+            }
           }
         });
         cursor.continue();
