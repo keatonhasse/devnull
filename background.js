@@ -5,9 +5,11 @@ browser.runtime.onInstalled.addListener(() => {
   }
   request.onupgradeneeded = (e) => {
     const db = e.target.result;
-    const store = db.createObjectStore('groups', { keyPath: 'timestamp' });
+    db.createObjectStore('groups', { keyPath: 'timestamp' });
   }
 });
+
+let group;
 
 async function getTabs() {
   const tabs = await browser.tabs.query({ currentWindow: true, pinned: false });
@@ -27,7 +29,7 @@ async function saveTabs(tabs) {
   indexedDB.open('devnull').onsuccess = (e) => {
     db = e.target.result;
     const store = db.transaction('groups', 'readwrite').objectStore('groups');
-    const group = {
+    group = {
       timestamp: Date.now(),
       title: 'untitled unmastered',
       tabs: tabs.map(tab => {
@@ -53,7 +55,8 @@ async function closeTabs(tabs) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
-      browser.runtime.sendMessage('group');
+      if (group.tabs.length > 0)
+        browser.runtime.sendMessage(group);
     }
   });
 }
@@ -64,7 +67,4 @@ browser.browserAction.onClicked.addListener(async () => {
       await saveTabs(tabs);
       await closeTabs(tabs);
     })
-    .catch(error => {
-      console.error(error);
-    });
 });

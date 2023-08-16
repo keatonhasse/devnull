@@ -2,14 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   getGroups();
 });
 
-function update() {
-  console.log(tabs);
-}
-
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  //if (request == 'update') update();
-  console.log(request);
-  //update(request);
+  createGroup(request);
 });
 
 function open(name, callback) {
