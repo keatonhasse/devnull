@@ -2,8 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
   getGroups();
 });
 
-browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  createGroup(request);
+browser.runtime.onMessage.addListener(() => {
+  open('devnull', (store) => {
+    store.openCursor(null, 'prev').onsuccess = (e) => {
+      const group = e.target.result.value;
+      if (!document.getElementById(group.timestamp))
+        createGroup(group);
+    };
+  });
 });
 
 function open(name, callback) {
@@ -11,7 +17,7 @@ function open(name, callback) {
     const db = e.target.result;
     const store = db.transaction('groups', 'readwrite').objectStore('groups');
     callback(store);
-  }
+  };
 }
 
 function restoreGroup(group) {
@@ -33,11 +39,11 @@ function deleteGroup(group) {
   });
 }
 
-function removeTabFromGroup(tab, group) {
+function removeTabFromGroup(index, group) {
   open('devnull', (store) => {
     store.get(group).onsuccess = (e) => {
       const item = e.target.result;
-      item.tabs = item.tabs.splice(tab, 1);
+      item.tabs.splice(index, 1);
       store.put(item);
     }
   });
@@ -61,37 +67,37 @@ function createGroup(group) {
     return header;
   }());
   groups.prepend(fragment);
+  const item = document.getElementById(group.timestamp);
+  item.addEventListener('click', (e) => {
+    if (e.target.className == 'restore-button' || e.target.className == 'delete-button') {
+      groups.removeChild(item);
+      (e.target.className == 'restore-button') ? restoreGroup(group.timestamp) : deleteGroup(group.timestamp);
+    }
+    if (e.target.className == 'tab' || e.target.className == 'tab-remove-button') {
+      const list = e.target.closest('.tab-list');
+      console.log(list);
+      const nodes = Array.from(list.children);
+      if (nodes.length == 2) {
+        groups.removeChild(list.parentElement);
+        deleteGroup(group.timestamp);
+      } else {
+        list.removeChild(e.target.parentElement);
+        const index = nodes.indexOf(e.target.parentElement) - 1;
+        removeTabFromGroup(index, group.timestamp);
+      }
+    }
+  });
 }
 
 function getGroups() {
-  indexedDB.open('devnull').onsuccess = (e) => {
-    const db = e.target.result;
-    const store = db.transaction('groups', 'readwrite').objectStore('groups');
+  open('devnull', (store) => {
     store.openCursor().onsuccess = (e) => {
       const cursor = e.target.result;
       if (cursor) {
         const group = cursor.value;
         createGroup(group);
-        const item = document.getElementById(group.timestamp);
-        item.addEventListener('click', (e) => {
-          if (e.target.className == 'restore-button' || e.target.className == 'delete-button') {
-            groups.removeChild(item);
-            (e.target.className == 'restore-button') ? restoreGroup(group.timestamp) : deleteGroup(group.timestamp);
-          }
-          if (e.target.className == 'tab' || e.target.className == 'tab-remove-button') {
-            const list = e.target.closest('.tab-list');
-            const nodes = Array.from(list.children);
-            if (nodes.length == 2) {
-              groups.removeChild(list.parentElement);
-              deleteGroup(group.timestamp);
-            } else {
-              list.removeChild(e.target.parentElement);
-              removeTabFromGroup(nodes.indexOf(e.target), group.timestamp);
-            }
-          }
-        });
         cursor.continue();
       }
     };
-  };
+  });
 }

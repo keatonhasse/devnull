@@ -5,7 +5,7 @@
     <title>devnull</title>
     <style>
       body {
-        margin: 0 2rem 0 2rem;
+        margin: 0 2rem;
       }
       
       @media (prefers-color-scheme: dark) {
@@ -14,56 +14,26 @@
           color: #f0f0f0;
         }
         
-        body button {
+        button {
           color: #f0f0f0;
         }
       }
       
-      header {
-        user-select: none;
-      }
-      
-      body ol {
-        margin: 1rem 0;
-        display: inline-block;
-      }
-      
-      body ol#groups li {
-        list-style: none;
-      }
-      
-      body ol#groups li a {
-        text-decoration: none;
-        color: royalblue;
-      }
-      
-      body div.group-header {
-        display: flex;
-      }
-      
-      body div.group-header h2 {
-        margin: 0 0.75rem 0 0;
-        user-select: none;
-      }
-      
-      body div.group-header p {
-        margin: 0;
-        user-select: none;
-      }
-      
-      body div.group-right {
-        flex-shrink: 0;
-      }
-      
-      body button {
+      button {
         background-color: transparent;
         border: none;
         padding: 0;
         cursor: pointer;
       }
-      
-      .restore-button {
-        margin-right: 0.5rem;
+
+      .group-header {
+        display: flex;
+        margin-bottom: 0.5rem;
+      }
+
+      .tab {
+        color: royalblue;
+        text-decoration: none;
       }
       
       .tab-remove-button {
@@ -81,17 +51,17 @@
     <header id="header">
       <h1>devnull</h1>
     </header>
-    <ol id="groups">
+    <ol id="groups" style="list-style: none;">
       <template id="group-template">
-        <li class="group">
+        <li class="group" style="margin-bottom: 2rem;">
           <div class="group-header">
-            <h2 class="group-title"></h2>
-            <div class="group-right">
-              <p class="group-date"></p>
-              <button class="restore-button">restore</button><button class="delete-button">delete</button>
+            <h2 class="group-title" style="margin: 0 1rem 0 0;"></h2>
+            <div class="group-right" style="flex-shrink: 0;">
+              <div class="group-date"></div>
+              <button class="restore-button" style="margin-right: 0.5rem">restore</button><button class="delete-button">delete</button>
             </div>
           </div>
-          <ol class="tab-list">
+          <ol class="tab-list" style="list-style: none;">
             <template id="tab-template">
               <li class="tab-item">
                 <a class="tab" target="_blank" rel="norefferer"></a><button class="tab-remove-button">remove</button>
@@ -102,7 +72,4 @@
       </template>
     </ol>
   </body>
-  <footer>
-    foot
-  </footer>
 </html>

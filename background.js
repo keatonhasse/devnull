@@ -9,8 +9,6 @@ browser.runtime.onInstalled.addListener(() => {
   }
 });
 
-let group;
-
 async function getTabs() {
   const tabs = await browser.tabs.query({ currentWindow: true, pinned: false });
   const tabList = tabs.map((tab) => {
@@ -29,7 +27,7 @@ async function saveTabs(tabs) {
   indexedDB.open('devnull').onsuccess = (e) => {
     db = e.target.result;
     const store = db.transaction('groups', 'readwrite').objectStore('groups');
-    group = {
+    const group = {
       timestamp: Date.now(),
       title: 'untitled unmastered',
       tabs: tabs.map(tab => {
@@ -46,17 +44,16 @@ async function saveTabs(tabs) {
 }
 
 async function closeTabs(tabs) {
-  await browser.tabs.remove(tabs.map((tab) => {
+  browser.tabs.create({});
+  browser.tabs.remove(tabs.map((tab) => {
     return tab.id;
   }));
   browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, (tab) => {
-    browser.tabs.create({});
     if (!tab.length) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
-      if (group.tabs.length > 0)
-        browser.runtime.sendMessage(group);
+      browser.runtime.sendMessage('update');
     }
   });
 }
