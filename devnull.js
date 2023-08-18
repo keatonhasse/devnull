@@ -55,7 +55,7 @@ function createGroup(group) {
   fragment.appendChild(function() {
     const header = document.getElementById('group-template').content.cloneNode(true);
     header.querySelector('.group').id = group.timestamp;
-    header.querySelector('.group-title').textContent = group.title;
+    header.querySelector('.group-title').textContent = `${group.tabs.length} tabs`;
     header.querySelector('.group-date').textContent = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
     const list = header.querySelector('.tab-list');
     group.tabs.map(tab => {

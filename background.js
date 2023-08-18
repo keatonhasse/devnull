@@ -44,17 +44,16 @@ async function saveTabs(tabs) {
 }
 
 async function closeTabs(tabs) {
-  browser.tabs.create({});
-  browser.tabs.remove(tabs.map((tab) => {
-    return tab.id;
-  }));
-  browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, (tab) => {
+  browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, async (tab) => {
     if (!tab.length) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
       browser.runtime.sendMessage('update');
     }
+    await browser.tabs.remove(tabs.map((tab) => {
+      return tab.id;
+    }));
   });
 }
 

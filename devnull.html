@@ -26,9 +26,14 @@
         cursor: pointer;
       }
 
+      ol {
+        list-style: none;
+      }
+
       .group-header {
         display: flex;
-        margin-bottom: 0.5rem;
+        column-gap: 1rem;
+        /*margin-bottom: 0.5rem;*/
       }
 
       .tab {
@@ -51,17 +56,17 @@
     <header id="header">
       <h1>devnull</h1>
     </header>
-    <ol id="groups" style="list-style: none;">
+    <ol id="groups">
       <template id="group-template">
         <li class="group" style="margin-bottom: 2rem;">
           <div class="group-header">
-            <h2 class="group-title" style="margin: 0 1rem 0 0;"></h2>
+            <h2 class="group-title" style="margin: 0;"></h2>
             <div class="group-right" style="flex-shrink: 0;">
               <div class="group-date"></div>
               <button class="restore-button" style="margin-right: 0.5rem">restore</button><button class="delete-button">delete</button>
             </div>
           </div>
-          <ol class="tab-list" style="list-style: none;">
+          <ol class="tab-list" style="margin-top: 1rem;">
             <template id="tab-template">
               <li class="tab-item">
                 <a class="tab" target="_blank" rel="norefferer"></a><button class="tab-remove-button">remove</button>
