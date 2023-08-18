@@ -51,6 +51,7 @@ async function closeTabs(tabs) {
       browser.tabs.update(tab[0].id, { active: true });
       browser.runtime.sendMessage('update');
     }
+    // test to see if it matters where this is, or if it needs to await
     await browser.tabs.remove(tabs.map((tab) => {
       return tab.id;
     }));
