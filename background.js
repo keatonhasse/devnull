@@ -44,15 +44,14 @@ async function saveTabs(tabs) {
 }
 
 async function closeTabs(tabs) {
-  browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, async (tab) => {
+  browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, (tab) => {
     if (!tab.length) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
       browser.runtime.sendMessage('update');
     }
-    // test to see if it matters where this is, or if it needs to await
-    await browser.tabs.remove(tabs.map((tab) => {
+    browser.tabs.remove(tabs.map((tab) => {
       return tab.id;
     }));
   });
