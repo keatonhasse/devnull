@@ -10,46 +10,16 @@ browser.runtime.onInstalled.addListener(() => {
 });
 
 function getTabs() {
-  return browser.tabs.query({ currentWindow: true, pinned: false, url: '<all_urls>' }).then((tabs) => {
-    /*for (const tab of tabs) {
-      if (tab.url != browser.runtime.getURL('/devnull.html')) {
-        return {
-          id: tab.id,
-          title: tab.title,
-          url: tab.url
-        }
-      }
-    }*/
+  const tabs = browser.tabs.query({ currentWindow: true, pinned: false }).then((tabs) => {
     return tabs.map((tab) => {
       return {
         id: tab.id,
         title: tab.title,
         url: tab.url
       }
-    })/*.filter((tab) => tab.url != browser.runtime.getURL('/devnull.html'));*/
-    //.filter((tab) => (!/moz-extension:\/\/[a-z0-9-]*\/devnull.html/.test(tab.url)));
+    }).filter((tab) => tab.url !== browser.runtime.getURL('/devnull.html'));
   });
-  /*const tabs = await browser.tabs.query({ currentWindow: true, pinned: false }).then((tabs) => {
-    return tabs.map((tab) => {
-      return {
-        id: tab.id,
-        title: tab.title,
-        url: tab.url
-      }
-    });
-  });
-  return tabs;*/
-  /*const tabs = await browser.tabs.query({ currentWindow: true, pinned: false });
-  const tabList = tabs.map((tab) => {
-    return {
-      id: tab.id,
-      title: tab.title,
-      url: tab.url
-    }
-  }).filter((tab) => {
-    return (!/moz-extension:\/\/[a-z0-9-]*\/devnull.html/.test(tab.url));
-  });
-  return tabList;*/
+  return tabs;
 }
 
 function saveTabs(tabs) {
@@ -62,9 +32,7 @@ function saveTabs(tabs) {
       tabs: tabs.map((tab) => {
         delete tab.id;
         return tab;
-      }).filter((tab) => {
-        return (tab.url != 'about:newtab');
-      })
+      }).filter((tab) => tab.url !== 'about:newtab')
     };
     if (group.tabs.length > 0) {
       store.add(group);
@@ -80,17 +48,13 @@ function closeTabs(tabs) {
       browser.tabs.update(tab[0].id, { active: true });
       browser.runtime.sendMessage('update');
     }
-    browser.tabs.remove(tabs.map((tab) => {
-      return tab.id;
-    }));
+    browser.tabs.remove(tabs.map((tab) => tab.id));
   });
 }
 
 browser.browserAction.onClicked.addListener(() => {
-  getTabs()
-    .then((tabs) => {
-      console.log(tabs);
+  getTabs().then((tabs) => {
       //saveTabs(tabs);
-      //closeTabs(tabs);
+      closeTabs(tabs);
     })
 });
