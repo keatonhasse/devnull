@@ -9,5 +9,10 @@
     },
     "browser_action": {
         "default_title": "devnull"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "devnull@keatonhasse.com"
+        }
     }
 }

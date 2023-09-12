@@ -24,10 +24,7 @@ function restoreGroup(group) {
   open('devnull', (store) => {
     store.get(group).onsuccess = (e) => {
       const tabs = e.target.result.tabs;
-      tabs.forEach((tab) => {
-        browser.tabs.create({ url: tab.url });
-        browser.tabs.update({ active: true });
-      });
+      tabs.forEach((tab) => browser.tabs.create({ url: tab.url }));
     }
   });
   deleteGroup(group);
@@ -55,10 +52,10 @@ function createGroup(group) {
   fragment.appendChild(function() {
     const header = document.getElementById('group-template').content.cloneNode(true);
     header.querySelector('.group').id = group.timestamp;
-    header.querySelector('.group-title').textContent = group.title;
+    header.querySelector('.group-tab-count').textContent = `${group.tabs.length} tabs`;
     header.querySelector('.group-date').textContent = `created ${new Date(group.timestamp).toLocaleString('en-US', { hour12: false })}`;
     const list = header.querySelector('.tab-list');
-    group.tabs.map(tab => {
+    group.tabs.map((tab) => {
       const item = header.getElementById('tab-template').content.cloneNode(true);
       item.querySelector('a').href = tab.url;
       item.querySelector('a').textContent = tab.title;
