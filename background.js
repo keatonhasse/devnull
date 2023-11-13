@@ -46,7 +46,9 @@ function closeTabs(tabs) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
-      browser.runtime.sendMessage('update');
+      //browser.runtime.sendMessage('update');
+      console.log(tabs);
+      browser.runtime.sendMessage(tabs);
     }
     browser.tabs.remove(tabs.map((tab) => tab.id));
   });
@@ -54,7 +56,7 @@ function closeTabs(tabs) {
 
 browser.browserAction.onClicked.addListener(() => {
   getTabs().then((tabs) => {
-      //saveTabs(tabs);
+      saveTabs(tabs);
       closeTabs(tabs);
     })
 });
