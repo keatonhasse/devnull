@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  getGroups();
+  //getGroups();
   document.querySelector('.menu').addEventListener('click', () => {
     document.querySelector('.menu').classList.toggle('change');
   });
@@ -62,7 +62,7 @@ function removeTabFromGroup(index, group) {
 function createGroup(group) {
   const groups = document.getElementById('groups');
   const fragment = document.createDocumentFragment();
-  fragment.appendChild(function() {
+  fragment.appendChild(function () {
     const header = document.getElementById('group-template').content.cloneNode(true);
     header.querySelector('.group').id = group.timestamp;
     header.querySelector('.group-title').textContent = `${group.title}`;
