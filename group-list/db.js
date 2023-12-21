@@ -6,24 +6,12 @@ function open(name, callback) {
   };
 }
 
-export default function getGroups() {
-  //let groups = [];
-  /*open('devnull', (store) => {
-    store.getAll().onsuccess = (e) => {
-      const groups = e.result;
-      return groups;
-    };
-  });*/
-  let groups = [];
-  open('devnull', (store) => {
-    store.openCursor().onsuccess = (e) => {
-      const cursor = e.target.result;
-      if (cursor) {
-        groups.push(cursor.value);
-        cursor.continue();
+export default async function getGroups() {
+  return new Promise((resolve, reject) => {
+    open('devnull', (store) => {
+      store.getAll().onsuccess = (e) => {
+        resolve(e.target.result);
       }
-    };
+    });
   });
-  return groups;
-  //callback(groups);
 }

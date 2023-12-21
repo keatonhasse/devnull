@@ -1,20 +1,29 @@
-import template from './template.js';
+import { styles, template } from './template.js';
 import getGroups from './db.js'
 
 class GroupList extends HTMLElement {
   constructor() {
     super();
-    let groups = getGroups();
-    console.log(groups);
-    groups.forEach((group) => console.log(group));
     const shadow = this.attachShadow({ mode: 'open' });
-    shadow.innerHTML = `${groups.map((group) => `
-        <p>${group}</p>
+    shadow.innerHTML = styles;
+    /*getGroups().then((groups) => {
+      shadow.innerHTML = `${template(groups)}`;*/
+    /*console.log(groups);
+    groups.map((group) => {
+      shadow.innerHTML = `${template(group)}`;
+    });*/
+    //});
+    /*shadow.innerHTML = `${groups.map((group) => `
+        <p>${group.title}</p>
       `)}
-    `;
+    `;*/
     //shadow.innerHTML = `${template(getGroups())}`;
-    //const groups = document.createElement('ol');
-    //groups.id = 'groups';
+    const list = document.createElement('ol');
+    list.id = 'groups';
+    getGroups().then((groups) => {
+      list.innerHTML = `${template(groups)}`;
+    });
+    shadow.appendChild(list);
     //console.log(getGroups());
     //groups.innerHTML = `${template(getGroups())}`;
     //const g = getGroups();
