@@ -1,132 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, inital-scale=1">
     <title>devnull</title>
     <style>
-      body {
-        margin: 0 2rem;
-      }
-
       @media (prefers-color-scheme: dark) {
-
-        .bar1,
-        .bar2,
-        .bar3 {
-          background-color: white;
-        }
-
         body {
           background-color: #0f0f0f;
           color: #f0f0f0;
         }
+      }
 
-        button {
-          color: #f0f0f0;
-        }
+      body {
+        margin: 0 2rem;
       }
 
       header {
         display: flex;
         align-items: center;
       }
-
-      .menu {
-        cursor: pointer;
-        margin: 0 1rem 0 0;
-      }
-
-      .bar1,
-      .bar2,
-      .bar3 {
-        width: 2rem;
-        height: 0.25rem;
-        background-color: black;
-        transition: 0.4s;
-      }
-
-      .change .bar1 {
-        transform: translate(0, 0.688rem) rotate(-45deg);
-      }
-
-      .change .bar2 {
-        opacity: 0;
-      }
-
-      .change .bar3 {
-        transform: translate(0, -0.688rem) rotate(45deg);
-      }
-
-      button {
-        background-color: transparent;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-      }
-
-      ol {
-        list-style: none;
-      }
-
-      .group:not(:nth-last-child(2)) {
-        margin-bottom: 2rem;
-      }
-
-      .group-header {
-        display: flex;
-        column-gap: 1rem;
-        margin-bottom: 1rem;
-      }
-
-      .tab {
-        color: royalblue;
-        text-decoration: none;
-      }
-
-      .tab-remove-button {
-        visibility: hidden;
-        margin-left: 0.5rem;
-      }
-
-      .tab-item:hover .tab-remove-button {
-        visibility: visible;
-      }
     </style>
-    <script type="module" src="group-list/group-list.js"></script>
+    <script type="module" src="components/group-list/group-list.js"></script>
   </head>
 
   <body>
     <header id="header">
-      <!-- <div class="menu">
-        <div class="bar1"></div>
-        <div class="bar2" style="margin: 0.5rem 0;"></div>
-        <div class="bar3"></div>
-      </div> -->
+      <!-- <settings-menu></settings-menu>-->
       <h1>devnull</h1>
     </header>
     <group-list></group-list>
-    <!-- <ol id="groups">
-      <template id="group-template">
-        <li class="group">
-          <div class="group-header">
-            <h2 class="group-title" contenteditable="true" spellcheck="false" style="margin: 0;"></h2> -->
-    <!-- <h2 class="group-tab-count" style="margin: 0;"></h2> -->
-    <!-- <div class="group-right" style="flex-shrink: 0;">
-              <div class="group-date"></div>
-              <button class="restore-button" style="margin-right: 0.5rem">restore</button><button class="delete-button">delete</button>
-            </div>
-          </div>
-          <ol class="tab-list">
-            <template id="tab-template">
-              <li class="tab-item">
-                <a class="tab" target="_blank" rel="norefferer"></a><button class="tab-remove-button">remove</button>
-              </li>
-            </template>
-          </ol>
-        </li>
-      </template>
-    </ol> -->
   </body>
 
 </html>

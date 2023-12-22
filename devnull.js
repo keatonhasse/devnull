@@ -5,21 +5,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-browser.runtime.onMessage.addListener((e) => {
-  console.log(e);
-  /*const tabs = e.map((tab) => {
-    delete tab.id;
-    return tab;
-  }).filter((tab) => tab.url !== 'about:newtab');
-  console.log(tabs);*/
-  /*open('devnull', (store) => {
-    store.openCursor(null, 'prev').onsuccess = (e) => {
-      const group = e.target.result.value;
-      if (!document.getElementById(group.timestamp))
-        createGroup(group);
-    };
-  });*/
-});
+//browser.runtime.onMessage.addListener((e) => {
+//  console.log(e);
+/*const tabs = e.map((tab) => {
+  delete tab.id;
+  return tab;
+}).filter((tab) => tab.url !== 'about:newtab');
+console.log(tabs);*/
+/*open('devnull', (store) => {
+  store.openCursor(null, 'prev').onsuccess = (e) => {
+    const group = e.target.result.value;
+    if (!document.getElementById(group.timestamp))
+      createGroup(group);
+  };
+});*/
+//});
 
 function open(name, callback) {
   indexedDB.open(name).onsuccess = (e) => {
@@ -86,7 +86,6 @@ function createGroup(group) {
     }
     if (e.target.className == 'tab' || e.target.className == 'tab-remove-button') {
       const list = e.target.closest('.tab-list');
-      //console.log(list);
       const nodes = Array.from(list.children);
       if (nodes.length == 2) {
         groups.removeChild(list.parentElement);
