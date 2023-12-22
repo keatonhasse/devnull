@@ -1,0 +1,44 @@
+@media (prefers-color-scheme: dark) {
+  button {
+    color: #f0f0f0;
+  }
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+ol {
+  list-style: none;
+}
+
+.group:not(:nth-last-child(1)) {
+  margin-bottom: 2rem;
+}
+
+.group-header {
+  display: flex;
+  column-gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  color: royalblue;
+  text-decoration: none;
+}
+
+.tab-remove-button {
+  visibility: hidden;
+  margin-left: 0.5rem;
+}
+
+.tab-item:hover .tab-remove-button {
+  visibility: visible;
+}
+
+ol {
+  list-style: none;
+}
