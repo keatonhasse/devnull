@@ -2,14 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
   getGroups();
 });
 
-browser.runtime.onMessage.addListener(() => {
-  open('devnull', (store) => {
-    store.openCursor(null, 'prev').onsuccess = (e) => {
-      const group = e.target.result.value;
-      if (!document.getElementById(group.timestamp))
-        createGroup(group);
-    };
-  });
+browser.runtime.onMessage.addListener((group) => {
+  createGroup(group)
 });
 
 function open(name, callback) {

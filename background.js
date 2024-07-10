@@ -36,6 +36,7 @@ function saveTabs(tabs) {
     };
     if (group.tabs.length > 0) {
       store.add(group);
+      browser.runtime.sendMessage(group);
     }
   }
 }
@@ -46,7 +47,6 @@ function closeTabs(tabs) {
       browser.tabs.create({ url: 'devnull.html', pinned: true, index: 0, active: true });
     } else {
       browser.tabs.update(tab[0].id, { active: true });
-      browser.runtime.sendMessage('update');
     }
     browser.tabs.remove(tabs.map((tab) => tab.id));
   });
@@ -54,7 +54,7 @@ function closeTabs(tabs) {
 
 browser.browserAction.onClicked.addListener(() => {
   getTabs().then((tabs) => {
-      //saveTabs(tabs);
+      saveTabs(tabs);
       closeTabs(tabs);
     })
 });
