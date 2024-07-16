@@ -61,9 +61,16 @@ function closeTabs(tabs) {
   });
 }
 
-browser.browserAction.onClicked.addListener(() => {
-  getTabs().then((tabs) => {
+browser.browserAction.onClicked.addListener((tab, OnClickData) => {
+  console.log(OnClickData);
+  if (!OnClickData.modifiers.length) {
+    getTabs().then((tabs) => {
       saveTabs(tabs);
       closeTabs(tabs);
-    })
+    });
+  } else if (OnClickData.modifiers.includes("Command")|| OnClickData.modifiers.includes("Alt")) {
+    getTabs().then((tabs) => {
+      closeTabs(tabs);
+    });
+  }
 });
