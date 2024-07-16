@@ -68,7 +68,7 @@ browser.browserAction.onClicked.addListener((tab, OnClickData) => {
       saveTabs(tabs);
       closeTabs(tabs);
     });
-  } else if (OnClickData.modifiers.includes("Command")|| OnClickData.modifiers.includes("Alt")) {
+  } else if (OnClickData.modifiers.includes('Command')|| OnClickData.modifiers.includes('Alt')) {
     getTabs().then((tabs) => {
       closeTabs(tabs);
     });
