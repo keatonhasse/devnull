@@ -10,12 +10,15 @@ browser.runtime.onInstalled.addListener(() => {
 });
 
 function getTabs() {
-  const tabs = browser.tabs.query({ currentWindow: true, pinned: false }).then((tabs) => {
+  const opts = { currentWindow: true, pinned: false };
+  const tabs = browser.tabs.query(opts).then((tabs) => {
     return tabs.map((tab) => {
       return {
         id: tab.id,
         title: tab.title,
-        url: tab.url
+        url: tab.url,
+        highlighted: tab.highlighted,
+        cookieStoreId: tab.cookieStoreId
       }
     }).filter((tab) => tab.url !== browser.runtime.getURL('/devnull.html'));
   });
@@ -26,17 +29,23 @@ function saveTabs(tabs) {
   indexedDB.open('devnull').onsuccess = (e) => {
     const db = e.target.result;
     const store = db.transaction('groups', 'readwrite').objectStore('groups');
+    const highlighted = tabs.filter((tab) => tab.highlighted);
+    const selected = (highlighted.length > 1) ? highlighted : tabs;
     const group = {
       timestamp: Date.now(),
       title: 'untitled unmastered',
-      tabs: tabs.map((tab) => {
+      tabs: selected.map((tab) => {
         delete tab.id;
+        delete tab.highlighted;
         return tab;
       }).filter((tab) => tab.url !== 'about:newtab')
     };
     if (group.tabs.length > 0) {
       store.add(group);
-      browser.runtime.sendMessage(group);
+      browser.tabs.query({ url: 'moz-extension://*/devnull.html' }, (tab) => {
+        if (tab.length)
+          browser.runtime.sendMessage(group);
+      });
     }
   }
 }

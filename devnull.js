@@ -18,7 +18,7 @@ function restoreGroup(group) {
   open('devnull', (store) => {
     store.get(group).onsuccess = (e) => {
       const tabs = e.target.result.tabs;
-      tabs.forEach((tab) => browser.tabs.create({ url: tab.url }));
+      tabs.forEach((tab) => browser.tabs.create({ url: tab.url, cookieStoreId: tab.cookieStoreId }));
     }
   });
   deleteGroup(group);
