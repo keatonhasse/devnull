@@ -3,7 +3,7 @@
     "name": "devnull",
     "version": "1.0",
     "description": "Send your tabs to the void!",
-    "permissions": ["tabs", "cookies" ],
+    "permissions": ["tabs", "cookies"],
     "background": {
         "scripts": ["background.js"]
     },
