@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   getGroups();
+  document.querySelector('#options').onclick = () => { browser.runtime.openOptionsPage() };
 });
 
 browser.runtime.onMessage.addListener((group) => {
