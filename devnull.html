@@ -1,44 +1,47 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>devnull</title>
-    <link rel="stylesheet" href="devnull.css" />
-    <script src="devnull.js"></script>
-  </head>
-  <body>
-    <header id="header" class="container">
-      <h1>devnull</h1>
-      <div class="v-container">
-        <button id="options">options</button>
-        <button>import</button>
-        <button>export</button>
-      </div>
-    </header>
-    <hr>
-    <ol id="groups">
-      <template id="group-template">
-        <li class="group">
-          <div class="group-header container">
-            <h2 class="group-tab-count"></h2>
-            <div class="group-info">
-              <div class="group-date"></div>
-              <div class="container">
-                <button class="restore-button">restore</button>
-                <button class="delete-button">delete</button>
-              </div>
+
+<head>
+  <meta charset="utf-8" />
+  <title>devnull</title>
+  <link rel="stylesheet" href="devnull.css" />
+  <script src="devnull.js"></script>
+</head>
+
+<body>
+  <header id="header" class="container">
+    <h1>devnull</h1>
+    <div class="v-container">
+      <button id="options">options</button>
+      <button>import</button>
+      <button>export</button>
+    </div>
+  </header>
+  <hr>
+  <ol id="groups">
+    <template id="group-template">
+      <li class="group">
+        <div class="group-header container">
+          <h2 class="group-tab-count"></h2>
+          <div class="group-info">
+            <div class="group-date"></div>
+            <div class="container">
+              <button class="restore-button">restore</button>
+              <button class="delete-button">delete</button>
             </div>
           </div>
-          <ol class="tab-list">
-            <template id="tab-template">
-              <li class="tab-item container">
-                <a class="tab" target="_blank" rel="norefferer"></a>
-                <button class="tab-remove-button">remove</button>
-              </li>
-            </template>
-          </ol>
-        </li>
-      </template>
-    </ol>
-  </body>
+        </div>
+        <ol class="tab-list">
+          <template id="tab-template">
+            <li class="tab-item container">
+              <a class="tab" target="_blank" rel="norefferer"></a>
+              <button class="tab-remove-button">remove</button>
+            </li>
+          </template>
+        </ol>
+      </li>
+    </template>
+  </ol>
+</body>
+
 </html>
